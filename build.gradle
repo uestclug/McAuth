@@ -1,7 +1,6 @@
 plugins {
 	id 'fabric-loom' version '0.4-SNAPSHOT'
 	id 'maven-publish'
-	id "com.github.johnrengelman.shadow" version "6.0.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -28,13 +27,12 @@ dependencies {
 	// You may need to force-disable transitiveness on them.
 
 	// sqlite
-	shadow group:'org.xerial', name:'sqlite-jdbc', version:'3.32.3.1'
 	implementation group:'org.xerial', name:'sqlite-jdbc', version:'3.32.3.1'
 	include group:'org.xerial', name:'sqlite-jdbc', version:'3.32.3.1'
 
 	// bcrypt
-	// shadow group: "org.mindrot", name: "jbcrypt", version: "0.4"
 	implementation group: "org.mindrot", name: "jbcrypt", version: "0.4"
+	include group: "org.mindrot", name: "jbcrypt", version: "0.4"
 
 }
 
