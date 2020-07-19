@@ -14,7 +14,7 @@ public abstract class MinecraftServerMixin {
         McAuthMod.init();
     }
 
-    @Inject(method = "shutdown", at = @At("HEAD"))
+    @Inject(method = "shutdown", at = @At("RETURN"))
     public void onShutdown(CallbackInfo info) {
         McAuthMod.shutdown();
     }

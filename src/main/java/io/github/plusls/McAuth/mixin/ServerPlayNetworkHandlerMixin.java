@@ -30,7 +30,7 @@ public abstract class ServerPlayNetworkHandlerMixin implements PacketListener {
     public ServerPlayerEntity player;
 
     @Inject(method = "onDisconnected(Lnet/minecraft/text/Text;)V", at = @At("HEAD"))
-    private void onDisconnect(Text text_1, CallbackInfo ci) {
+    private void onDisconnect(Text reason, CallbackInfo ci) {
         // save last disconnect pos.
         if (McAuthMod.auth.loggedIn(this.player)) {
             McAuthMod.auth.logout(this.player);
