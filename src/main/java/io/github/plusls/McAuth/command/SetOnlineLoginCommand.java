@@ -38,17 +38,17 @@ public class SetOnlineLoginCommand {
             player.server.getGameProfileRepo().findProfilesByNames(new String[]{username}, Agent.MINECRAFT, myProfileLookupCallback);
             if (myProfileLookupCallback.gameProfile == null) {
                 McAuthMod.LOGGER.info(String.format("Get %s gameProfile failed", username));
-                player.sendSystemMessage(new LiteralText("§cGet online gameProfile failed."), Util.NIL_UUID);
+                player.sendSystemMessage(new LiteralText("Get online gameProfile failed."), Util.NIL_UUID);
                 return -1;
             } else {
                 McAuthMod.LOGGER.info(String.format("Get %s gameProfile success.", username));
             }
             if (McAuthMod.auth.register(player, null, true,
                     myProfileLookupCallback.gameProfile.getId())) {
-                player.sendSystemMessage(new LiteralText("§aSetOnlineLogin success!!"), Util.NIL_UUID);
+                player.sendSystemMessage(new LiteralText("SetOnlineLogin success!!"), Util.NIL_UUID);
                 return 0;
             } else {
-                player.sendSystemMessage(new LiteralText("§cRegister failed."), Util.NIL_UUID);
+                player.sendSystemMessage(new LiteralText("§cRegister failed.§r"), Util.NIL_UUID);
                 return -1;
             }
         } else {

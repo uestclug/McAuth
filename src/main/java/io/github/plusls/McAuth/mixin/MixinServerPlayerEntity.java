@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerEntityMixin extends PlayerEntity {
+public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
-    public ServerPlayerEntityMixin(World world, BlockPos blockPos, GameProfile gameProfile) {
-        super(world, blockPos, gameProfile);
+    public MixinServerPlayerEntity(World world, BlockPos blockPos, GameProfile gameProfile) {
+        super(world, blockPos, 0, gameProfile);
     }
 
     // no damage
