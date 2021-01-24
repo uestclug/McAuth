@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.5-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -12,6 +12,11 @@ group = project.maven_group
 
 repositories {
 	mavenCentral()
+	maven { url = "https://maven.nucleoid.xyz/" }
+}
+
+loom {
+	accessWidener "src/main/resources/mc_auth_mod.accesswidener"
 }
 
 dependencies {

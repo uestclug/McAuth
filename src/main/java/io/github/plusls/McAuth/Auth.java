@@ -2,27 +2,61 @@ package io.github.plusls.McAuth;
 
 import io.github.plusls.McAuth.db.Database;
 import io.github.plusls.McAuth.db.User;
+import io.github.plusls.McAuth.util.Translator;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class Auth {
-    public ScheduledThreadPoolExecutor scheduler = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(1);
-    private Set<UUID> loggedIn = new HashSet<UUID>();
-    private Map<UUID, String> hint = new HashMap<UUID, String>();
-    private Database db = null;
+    private final Set<UUID> loggedIn = new HashSet<>();
+    private final Map<UUID, String> hint = new HashMap<>();
+    private final Database db;
 
     public Auth() throws SQLException {
-        Path path = Paths.get(FabricLoader.getInstance().getConfigDirectory().getAbsolutePath(), "McAuth.db");
+        Path path = Paths.get(FabricLoader.getInstance().getConfigDir().toString(), "McAuth.db");
         this.db = new Database(path);
-        this.scheduler.setRemoveOnCancelPolicy(true);
+    }
+
+    public static void onDisconnect(ServerPlayNetworkHandler serverPlayNetworkHandler, MinecraftServer minecraftServer) {
+        // save last disconnect pos.
+        if (McAuthMod.auth.loggedIn(serverPlayNetworkHandler.player)) {
+            McAuthMod.auth.logout(serverPlayNetworkHandler.player);
+            // tp player to spawn pos
+//            ServerWorld overworld = server.getWorld(World.OVERWORLD);
+//            // Apparently you cant getSpawnPos() from server, kind of weird its client-only
+//            WorldProperties properties = overworld.getLevelProperties();
+//            BlockPos spawn = new BlockPos(properties.getSpawnX(), properties.getSpawnY(), properties.getSpawnZ());
+//            if (!overworld.getWorldBorder().contains(spawn)) {
+//                spawn = overworld.getTopPosition(Heightmap.Type.MOTION_BLOCKING, new BlockPos(overworld.getWorldBorder().getCenterX(), 0.0D, overworld.getWorldBorder().getCenterZ()));
+//            }
+//            player.teleport(overworld, spawn.getX(), spawn.getY(), spawn.getZ(), player.yaw, player.pitch);
+        }
+    }
+
+    public static void onJoin(ServerPlayNetworkHandler serverPlayNetworkHandler, PacketSender packetSender, MinecraftServer minecraftServer) {
+        User user = McAuthMod.auth.getUser(serverPlayNetworkHandler.player);
+        if (user != null) {
+            // check online mode
+            if (user.onlineMode) {
+                McAuthMod.auth.login(serverPlayNetworkHandler.player, null);
+                return;
+            }
+            McAuthMod.auth.addHint(serverPlayNetworkHandler.player, "mc_auth_mod.hint.login");
+        } else {
+            McAuthMod.auth.addHint(serverPlayNetworkHandler.player, "mc_auth_mod.hint.register");
+        }
+        serverPlayNetworkHandler.player.sendSystemMessage(
+                new LiteralText(Translator.tr(McAuthMod.auth.getHint(serverPlayNetworkHandler.player))),
+                serverPlayNetworkHandler.player.getUuid());
     }
 
     public boolean register(ServerPlayerEntity player, String password, boolean onlineMode, UUID onlineUuid) {
@@ -46,9 +80,9 @@ public class Auth {
         if (this.db.createUser(user)) {
             this.deleteHint(player);
             if (onlineMode) {
-                this.addHint(player, "§aReconnect to server will auto login!!");
+                this.addHint(player, "mc_auth_mod.hint.reconnect");
             } else {
-                this.addHint(player, "Login with §7/login <password>");
+                this.addHint(player, "mc_auth_mod.hint.login");
             }
             return true;
         } else {
@@ -56,12 +90,25 @@ public class Auth {
         }
     }
 
+
+    public boolean userExistsByUUID(UUID uuid) {
+        return this.db.userExistsByUUID(uuid);
+    }
+
     public boolean userExists(ServerPlayerEntity player) {
-        return this.db.userExistsByUUID(player.getUuid());
+        return userExistsByUUID(player.getUuid());
+    }
+
+    public User getUserByUUID(UUID uuid) {
+        return this.db.getUserByUUID(uuid);
     }
 
     public User getUser(ServerPlayerEntity player) {
-        return this.db.getUserByUUID(player.getUuid());
+        return getUserByUUID(player.getUuid());
+    }
+
+    public List<User> getUserList() {
+        return this.db.getUserList();
     }
 
     public User getUserByUsername(String username) {
@@ -133,7 +180,6 @@ public class Auth {
 
     public void clear() {
         this.db.close();
-        this.scheduler.shutdownNow();
         this.loggedIn.clear();
         this.hint.clear();
     }

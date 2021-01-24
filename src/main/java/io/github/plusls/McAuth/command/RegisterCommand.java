@@ -5,11 +5,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.plusls.McAuth.McAuthMod;
+import io.github.plusls.McAuth.util.Translator;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.Util;
 
 public class RegisterCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
@@ -32,20 +33,25 @@ public class RegisterCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> commandContext) {
-        ServerPlayerEntity player = (ServerPlayerEntity) commandContext.getSource().getEntity();
+        ServerCommandSource source = commandContext.getSource();
+        Entity sourceEntity = source.getEntity();
+        if (!(sourceEntity instanceof ServerPlayerEntity)) {
+            return -1;
+        }
+        ServerPlayerEntity player = (ServerPlayerEntity) sourceEntity;
         String password = StringArgumentType.getString(commandContext, "password");
 
         if (password.equals(StringArgumentType.getString(commandContext, "verify"))) {
 
             if (McAuthMod.auth.register(player, password, false, null)) {
-                player.sendSystemMessage(new LiteralText("§aRegister success!!"), Util.NIL_UUID);
+                source.sendFeedback(new LiteralText(Translator.tr("mc_auth_mod.register.success")), true);
                 return 0;
             } else {
-                player.sendSystemMessage(new LiteralText("§cRegister failed."), Util.NIL_UUID);
+                source.sendFeedback(new LiteralText(Translator.tr("mc_auth_mod.register.failed")), true);
                 return -1;
             }
         } else {
-            player.sendSystemMessage(new LiteralText("§cThe password is not the same as the second one!"), Util.NIL_UUID);
+            source.sendFeedback(new LiteralText(Translator.tr("mc_auth_mod.register.password_not_equal")), true);
             return -1;
         }
     }

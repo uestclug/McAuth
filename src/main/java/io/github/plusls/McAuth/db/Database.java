@@ -8,6 +8,8 @@ import net.minecraft.world.World;
 
 import java.nio.file.Path;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Database {
@@ -157,6 +159,37 @@ public class Database {
             McAuthMod.LOGGER.error("getUserResultSetByUUID fail.", e);
         }
         return results;
+    }
+
+    private static final String SQL_QUERY_USERS = "SELECT * FROM `user`";
+
+    public List<User> getUserList() {
+        List<User> userList = new ArrayList<>();
+        ResultSet results = null;
+        PreparedStatement pStmt = null;
+        try {
+            pStmt = this.conn.prepareStatement(SQL_QUERY_USERS);
+            results = pStmt.executeQuery();
+            while (results.next()) {
+                User user = new User(
+                        UUID.fromString(results.getString(1)),
+                        results.getString(2),
+                        results.getString(3),
+                        results.getBoolean(4),
+                        results.getDouble(5),
+                        results.getDouble(6),
+                        results.getDouble(7),
+                        RegistryKey.of(Registry.DIMENSION, new Identifier(results.getString(8)))
+                );
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            McAuthMod.LOGGER.error("getUserList fail.", e);
+        } finally {
+            closeResultSet(results);
+            closePStmt(pStmt);
+        }
+        return userList;
     }
 
     private static final String SQL_QUERY_USER_BY_USERNAME = "SELECT * FROM `user` WHERE `username` = ?";

@@ -5,6 +5,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.plusls.McAuth.McAuthMod;
+import io.github.plusls.McAuth.util.Translator;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -33,13 +35,17 @@ final public class LoginCommand {
     }
 
     private static int execute(CommandContext<ServerCommandSource> commandContext) {
-        ServerPlayerEntity player = (ServerPlayerEntity) commandContext.getSource().getEntity();
-        String password = StringArgumentType.getString(commandContext, "password");
-        if (!McAuthMod.auth.login(player, password)) {
-            player.sendSystemMessage(new LiteralText("§cWrong password!"), Util.NIL_UUID);
+        Entity sourceEntity = commandContext.getSource().getEntity();
+        if (!(sourceEntity instanceof ServerPlayerEntity)) {
             return -1;
         }
-        player.sendSystemMessage(new LiteralText("§aLogin success!!"), Util.NIL_UUID);
+        ServerPlayerEntity player = (ServerPlayerEntity) sourceEntity;
+        String password = StringArgumentType.getString(commandContext, "password");
+        if (!McAuthMod.auth.login(player, password)) {
+            player.sendSystemMessage(new LiteralText(Translator.tr("mc_auth_mod.login.wrong_password")), Util.NIL_UUID);
+            return -1;
+        }
+        player.sendSystemMessage(new LiteralText(Translator.tr("mc_auth_mod.login.success")), Util.NIL_UUID);
         return 0;
     }
 }

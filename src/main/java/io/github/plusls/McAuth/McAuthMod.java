@@ -1,8 +1,10 @@
 package io.github.plusls.McAuth;
 
 import io.github.plusls.McAuth.command.*;
+import io.github.plusls.McAuth.util.Translator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,16 +22,20 @@ public class McAuthMod implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(RegisterCommand::register);
         CommandRegistrationCallback.EVENT.register(PasswdCommand::register);
         CommandRegistrationCallback.EVENT.register(DeleteAccountCommand::register);
+        CommandRegistrationCallback.EVENT.register(OfflineWhitelistCommand::register);
+        CommandRegistrationCallback.EVENT.register(UpdateWhitelistCommand::register);
+        Translator.reloadLanguage();
     }
 
     public static void init() {
         try {
             McAuthMod.auth = new Auth();
+            ServerPlayConnectionEvents.DISCONNECT.register(Auth::onDisconnect);
+            ServerPlayConnectionEvents.JOIN.register(Auth::onJoin);
         } catch (SQLException e) {
             // log error and make game crash.
             throw new RuntimeException("Initialization failed for McAuth.", e);
         }
-
     }
 
     public static void shutdown() {

@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "mc_auth_mod",
   "version": "${version}",
-
   "name": "Mc Auth Mod",
   "description": "Mc Auth Mod",
   "authors": [
@@ -13,10 +12,8 @@
     "sources": "https://github.com/uestclug/McAuth",
     "issues": "https://github.com/uestclug/McAuth/issues"
   },
-
   "license": "CC0-1.0",
   "icon": "assets/mc_auth_mod/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -26,11 +23,16 @@
   "mixins": [
     "mc_auth_mod.mixins.json"
   ],
-
+  "accessWidener": "mc_auth_mod.accesswidener",
   "depends": {
     "fabricloader": ">=0.7.4",
-    "fabric": "*",
-    "minecraft": "1.16.x"
+    "fabric": ">=0.28.0",
+    "minecraft": [
+      "1.16.2",
+      "1.16.3",
+      "1.16.4",
+      "1.16.5"
+    ]
   },
   "suggests": {
     "flamingo": "*"
