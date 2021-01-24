@@ -1,8 +1,14 @@
-# Fabric Example Mod
+# Mc Auth Mod
 
-## Setup
-https://github.com/bongoStudios/fauth
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+## Command
+
++ deleteAccount <username>
++ login <password>
++ offlineWhitelist <username>
++ passwd <password> <password>
++ register <password> <password>
++ setOnlineLogin <username>
++ updateWhitelist
 
 ## License
 
