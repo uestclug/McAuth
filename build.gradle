@@ -13,6 +13,9 @@ group = project.maven_group
 repositories {
 	mavenCentral()
 	maven { url = "https://maven.nucleoid.xyz/" }
+	maven {
+		url 'https://masa.dy.fi/maven'
+	}
 }
 
 loom {
@@ -39,6 +42,8 @@ dependencies {
 	implementation group: "org.mindrot", name: "jbcrypt", version: "0.4"
 	include group: "org.mindrot", name: "jbcrypt", version: "0.4"
 
+	// carpet
+	modImplementation "carpet:fabric-carpet:${project.minecraft_version}-${project.carpet_core_version}"
 }
 
 processResources {

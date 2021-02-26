@@ -57,13 +57,13 @@ public class UpdateWhitelistCommand {
         // 删除掉在白名单中但是不在数据库中的用户
         List<GameProfile> removeUserList = new ArrayList<>();
         for (Map.Entry<String, Set<UUID>> entry : userUUidMap.entrySet()) {
-            if (entry.getValue().size() > 1) {
-                for (UUID uuid : entry.getValue()) {
-                    if (!authUserUUIDSet.contains(uuid)) {
-                        removeUserList.add(new GameProfile(uuid, entry.getKey()));
-                    }
+            // if (entry.getValue().size() > 1) {
+            for (UUID uuid : entry.getValue()) {
+                if (!authUserUUIDSet.contains(uuid)) {
+                    removeUserList.add(new GameProfile(uuid, entry.getKey()));
                 }
             }
+            //}
         }
         if (removeUserList.size() > 0) {
             WhitelistCommand.executeRemove(source, removeUserList);

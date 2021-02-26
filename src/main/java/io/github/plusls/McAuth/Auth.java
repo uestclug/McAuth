@@ -129,7 +129,7 @@ public class Auth {
             return true;
         }
         if (BCrypt.checkpw(password, user.password)) {
-            player.teleport(player.server.getWorld(user.world), user.x, user.y, user.z, player.yaw, player.pitch);
+            // player.teleport(player.server.getWorld(user.world), user.x, user.y, user.z, player.yaw, player.pitch);
             this.loggedIn.add(player.getUuid());
             this.deleteHint(player);
             return true;
@@ -150,6 +150,8 @@ public class Auth {
         if (!this.userExists(player)) {
             return false;
         }
+        // TODO
+        // 未考虑玩家死亡的情况
         return this.db.updatePosByUUID(player.getUuid(), player.getX(), player.getY(), player.getZ(), player.world.getRegistryKey());
     }
 
