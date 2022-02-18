@@ -20,13 +20,13 @@ import java.util.UUID;
 
 @Mixin(ServerLoginNetworkHandler.class)
 public abstract class MixinServerLoginNetworkHandler implements ServerLoginPacketListener {
-    @Shadow
-    private GameProfile profile;
     @Final
     @Shadow
     public ClientConnection connection;
+    @Shadow
+    GameProfile profile;
 
-    @Redirect(method = "onHello(Lnet/minecraft/network/packet/c2s/login/LoginHelloC2SPacket;)V",
+    @Redirect(method = "onHello",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;isOnlineMode()Z", ordinal = 0))
     private boolean redirectIsOnlineMode(MinecraftServer server) {
         String username = this.profile.getName();

@@ -18,7 +18,7 @@
   "mc_auth_mod.delete_account.success": "§aDelete account %s success!§r",
   "mc_auth_mod.delete_account.failed": "§cDelete account %s failed, try again.§r",
   "mc_auth_mod.delete_account.no_account": "§cCan't find account %s.§r",
-  "mc_auth_mod.updateWhitelist.success":"§aUpdate whitelist success! Add %d user, remove %d user.§r",
+  "mc_auth_mod.updateWhitelist.success": "§aUpdate whitelist success! Add %d user, remove %d user.§r",
   "mc_auth_mod.hint.login": "Login with §7/login <password>§r",
   "mc_auth_mod.hint.register": "Please register with §7/register <password> <password>§r\nor §7/setOnlineLogin <username>§r to Use minecraft online mode auth.",
   "mc_auth_mod.hint.reconnect": "§aReconnect to server will auto login!!§r"

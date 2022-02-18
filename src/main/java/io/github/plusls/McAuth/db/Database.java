@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class Database {
-    private Connection conn;
     private static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS `user` (\n"
             + "	`uuid` TEXT PRIMARY KEY,\n"
             + " `username` TEXT NOT NULL,\n"
@@ -24,6 +23,16 @@ public class Database {
             + " `z` REAL,\n"
             + " `world` TEXT\n"
             + ");";
+    private static final String SQL_INSERT_USER = "INSERT INTO `user`(`uuid`, `username`, `password`, "
+            + "`online_mode`, `x`, `y`, `z`, `world`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_UPDATE_PASSWORD = "UPDATE `user` SET `password` = ? WHERE `uuid` = ?";
+    private static final String SQL_UPDATE_POS = "UPDATE `user` SET `x` = ?, `y` = ?, `z` = ?, `world` = ? WHERE `uuid` = ?";
+    private static final String SQL_UPDATE_ALL_POS = "UPDATE `user` SET `x` = ?, `y` = ?, `z` = ?, `world` = ?";
+    private static final String SQL_QUERY_USER = "SELECT * FROM `user` WHERE `uuid` = ?";
+    private static final String SQL_QUERY_USERS = "SELECT * FROM `user`";
+    private static final String SQL_QUERY_USER_BY_USERNAME = "SELECT * FROM `user` WHERE `username` = ?";
+    private static final String SQL_DELETE_USER = "DELETE FROM `user` WHERE `uuid` = ?";
+    private Connection conn;
 
     public Database(Path path) throws SQLException {
         path = path.normalize();
@@ -53,9 +62,6 @@ public class Database {
         }
     }
 
-    private static final String SQL_INSERT_USER = "INSERT INTO `user`(`uuid`, `username`, `password`, "
-            + "`online_mode`, `x`, `y`, `z`, `world`) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-
     public boolean createUser(User user) {
         boolean ret = false;
         PreparedStatement pStmt = null;
@@ -79,8 +85,6 @@ public class Database {
         return ret;
     }
 
-    private static final String SQL_UPDATE_PASSWORD = "UPDATE `user` SET `password` = ? WHERE `uuid` = ?";
-
     public boolean updatePasswordByUUID(UUID uuid, String password) {
         boolean ret = false;
         PreparedStatement pStmt = null;
@@ -100,8 +104,6 @@ public class Database {
         }
         return ret;
     }
-
-    private static final String SQL_UPDATE_POS = "UPDATE `user` SET `x` = ?, `y` = ?, `z` = ?, `world` = ? WHERE `uuid` = ?";
 
     public boolean updatePosByUUID(UUID uuid, double x, double y, double z, RegistryKey<World> world) {
         boolean ret = false;
@@ -126,8 +128,6 @@ public class Database {
         return ret;
     }
 
-    private static final String SQL_UPDATE_ALL_POS = "UPDATE `user` SET `x` = ?, `y` = ?, `z` = ?, `world` = ?";
-
     public int updateAllPos(double x, double y, double z, RegistryKey<World> world) {
         int ret = 0;
         PreparedStatement pStmt = null;
@@ -146,8 +146,6 @@ public class Database {
         return ret;
     }
 
-    private static final String SQL_QUERY_USER = "SELECT * FROM `user` WHERE `uuid` = ?";
-
     private ResultSet getUserResultSetByUUID(UUID uuid) {
         ResultSet results = null;
         PreparedStatement pStmt = null;
@@ -160,8 +158,6 @@ public class Database {
         }
         return results;
     }
-
-    private static final String SQL_QUERY_USERS = "SELECT * FROM `user`";
 
     public List<User> getUserList() {
         List<User> userList = new ArrayList<>();
@@ -179,7 +175,7 @@ public class Database {
                         results.getDouble(5),
                         results.getDouble(6),
                         results.getDouble(7),
-                        RegistryKey.of(Registry.DIMENSION, new Identifier(results.getString(8)))
+                        RegistryKey.of(Registry.WORLD_KEY, new Identifier(results.getString(8)))
                 );
                 userList.add(user);
             }
@@ -191,8 +187,6 @@ public class Database {
         }
         return userList;
     }
-
-    private static final String SQL_QUERY_USER_BY_USERNAME = "SELECT * FROM `user` WHERE `username` = ?";
 
     public User getUserByUsername(String username) {
         User user = null;
@@ -211,7 +205,7 @@ public class Database {
                         results.getDouble(5),
                         results.getDouble(6),
                         results.getDouble(7),
-                        RegistryKey.of(Registry.DIMENSION, new Identifier(results.getString(8)))
+                        RegistryKey.of(Registry.WORLD_KEY, new Identifier(results.getString(8)))
                 );
             }
         } catch (SQLException e) {
@@ -237,7 +231,7 @@ public class Database {
                         results.getDouble(5),
                         results.getDouble(6),
                         results.getDouble(7),
-                        RegistryKey.of(Registry.DIMENSION, new Identifier(results.getString(8)))
+                        RegistryKey.of(Registry.WORLD_KEY, new Identifier(results.getString(8)))
                 );
             }
         } catch (SQLException e) {
@@ -261,8 +255,6 @@ public class Database {
         }
         return ret;
     }
-
-    private static final String SQL_DELETE_USER = "DELETE FROM `user` WHERE `uuid` = ?";
 
     public boolean deleteUserByUUID(UUID uuid) {
         boolean ret;

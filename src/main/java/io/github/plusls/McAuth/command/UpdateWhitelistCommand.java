@@ -29,7 +29,7 @@ public class UpdateWhitelistCommand {
 
     private static int execute(CommandContext<ServerCommandSource> commandContext) throws CommandSyntaxException {
         ServerCommandSource source = commandContext.getSource();
-        Whitelist whitelist = source.getMinecraftServer().getPlayerManager().getWhitelist();
+        Whitelist whitelist = source.getServer().getPlayerManager().getWhitelist();
         List<GameProfile> newUserList = new ArrayList<>();
         List<User> authUserList = McAuthMod.auth.getUserList();
         Set<UUID> authUserUUIDSet = new HashSet<>();

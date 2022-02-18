@@ -18,7 +18,7 @@
   "mc_auth_mod.delete_account.success": "§a删除账户 %s 成功！§r",
   "mc_auth_mod.delete_account.failed": "§c删除账户 %s 失败，请重试。§r",
   "mc_auth_mod.delete_account.no_account": "§c找不到账户 %s。§r",
-  "mc_auth_mod.updateWhitelist.success":"§a更新白名单成功！添加了 %d 个用户，删除了 %d 个用户。§r",
+  "mc_auth_mod.updateWhitelist.success": "§a更新白名单成功！添加了 %d 个用户，删除了 %d 个用户。§r",
   "mc_auth_mod.hint.login": "使用 §7/login <password>§r 登陆服务器",
   "mc_auth_mod.hint.register": "正版登录玩家请使用 §7/setOnlineLogin <username>§r 设置当前账号为正版账号，\n否则使用使用 §7/register <password> <password>§r 注册账号。",
   "mc_auth_mod.hint.reconnect": "§a重连服务器将会自动登陆!§r"

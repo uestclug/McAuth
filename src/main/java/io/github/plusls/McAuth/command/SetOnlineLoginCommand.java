@@ -7,7 +7,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.plusls.McAuth.McAuthMod;
 import io.github.plusls.McAuth.util.MyProfileLookupCallback;
 import io.github.plusls.McAuth.util.Translator;
@@ -65,9 +64,9 @@ public class SetOnlineLoginCommand {
                     myProfileLookupCallback.gameProfile.getId())) {
                 UUID offlineUuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(Charsets.UTF_8));
                 try {
-                    if (source.getMinecraftServer().getPlayerManager().isWhitelistEnabled() &&
+                    if (source.getServer().getPlayerManager().isWhitelistEnabled() &&
                             WhitelistCommand.executeRemove(commandContext.getSource(),
-                            Collections.singleton(new GameProfile(offlineUuid, username))) != 0) {
+                                    Collections.singleton(new GameProfile(offlineUuid, username))) != 0) {
 
                         source.sendFeedback(
                                 new LiteralText(Translator.tr("mc_auth_mod.set_online_login.remove_whitelist_success")),

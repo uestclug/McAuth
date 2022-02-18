@@ -17,20 +17,6 @@ public class McAuthMod implements ModInitializer {
     public static Auth auth = null;
     public static boolean isCarpetLoaded;
 
-    @Override
-    public void onInitialize() {
-        CommandRegistrationCallback.EVENT.register(LoginCommand::register);
-        CommandRegistrationCallback.EVENT.register(SetOnlineLoginCommand::register);
-        CommandRegistrationCallback.EVENT.register(RegisterCommand::register);
-        CommandRegistrationCallback.EVENT.register(PasswdCommand::register);
-        CommandRegistrationCallback.EVENT.register(DeleteAccountCommand::register);
-        CommandRegistrationCallback.EVENT.register(OfflineWhitelistCommand::register);
-        CommandRegistrationCallback.EVENT.register(UpdateWhitelistCommand::register);
-        Translator.reloadLanguage();
-        isCarpetLoaded = FabricLoader.getInstance().isModLoaded("carpet");
-
-    }
-
     public static void init() {
         try {
             McAuthMod.auth = new Auth();
@@ -47,5 +33,19 @@ public class McAuthMod implements ModInitializer {
             McAuthMod.auth.clear();
             McAuthMod.auth = null;
         }
+    }
+
+    @Override
+    public void onInitialize() {
+        CommandRegistrationCallback.EVENT.register(LoginCommand::register);
+        CommandRegistrationCallback.EVENT.register(SetOnlineLoginCommand::register);
+        CommandRegistrationCallback.EVENT.register(RegisterCommand::register);
+        CommandRegistrationCallback.EVENT.register(PasswdCommand::register);
+        CommandRegistrationCallback.EVENT.register(DeleteAccountCommand::register);
+        CommandRegistrationCallback.EVENT.register(OfflineWhitelistCommand::register);
+        CommandRegistrationCallback.EVENT.register(UpdateWhitelistCommand::register);
+        Translator.reloadLanguage();
+        isCarpetLoaded = FabricLoader.getInstance().isModLoaded("carpet");
+
     }
 }

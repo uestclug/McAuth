@@ -19,10 +19,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Translator {
-    private static Config config;
     private static final Path configPath = Paths.get(FabricLoader.getInstance().getConfigDir().toString(), "mc_auth_mod.json");
-    private static Map<String, String> translationMap;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static Config config;
+    private static Map<String, String> translationMap;
 
     public static String tr(String key) {
         return translationMap.getOrDefault(key, key);
